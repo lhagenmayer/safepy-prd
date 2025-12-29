@@ -230,6 +230,26 @@ graph TD
 - **API Bridge Node:** Connect frontend to backend, type-safe data flow
 - **Validation Node:** Cross-context data validation with shared types
 
+#### 1.3 Intelligent Node Organization & Filtering
+
+**Automatic Arrangements:**
+- **Deliverable-Based Layout:** Nodes automatically arranged by deliverable membership
+- **Context Separation:** Frontend nodes grouped left, backend nodes grouped right
+- **Dependency Flow:** Nodes positioned to show data flow direction (left→right)
+- **Smart Spacing:** Automatic spacing to prevent overlap and show relationships
+
+**Advanced Filtering & Highlighting:**
+- **Context Filter:** Show only "Frontend", "Backend", or "Hybrid" nodes
+- **Deliverable Filter:** Display nodes belonging to specific deliverables
+- **Status Highlighting:** Color-code nodes by completion status (planned, in-progress, completed)
+- **Type Filtering:** Show only specific node types (data sources, transforms, outputs)
+
+**Visual Organization Features:**
+- **Deliverable Containers:** Visual grouping of nodes by deliverable with collapsible sections
+- **Progress Indicators:** Visual progress bars on deliverable groupings
+- **Dependency Lines:** Highlighted connection paths between deliverables
+- **Zoom to Deliverable:** Auto-zoom and center on selected deliverable's nodes
+
 #### 1.3 Constraint System (MVP)
 - **Type Matching:** Nodes only connect if data types are compatible
 - **Required Fields:** Essential configuration must be provided
@@ -276,11 +296,12 @@ graph TB
     %% User Layer
     subgraph "User Interaction Layer"
         UI[Next.js Frontend]
-        GE[Graph Editor Canvas]
-        NP[Node Palette]
-        PP[Properties Panel]
+        GE[Graph Editor Canvas<br/>Auto-arrangement & Filtering]
+        NP[Node Palette<br/>Context-aware]
+        PP[Properties Panel<br/>Deliverable-integrated]
         PM[Project Manager]
-        DM[Deliverable Manager]
+        DM[Deliverable Manager<br/>Visual Dashboard]
+        NF[Node Filters<br/>Context/Deliverable/Status]
     end
 
     %% AI Navigation Layer
@@ -337,8 +358,11 @@ graph TB
     UI --> GE
     GE --> NP
     GE --> PP
+    GE --> NF
+    NF --> GE
     UI --> PM
     UI --> DM
+    DM --> NF
 
     DM --> DL
     DL --> DS
@@ -403,7 +427,7 @@ graph TB
     classDef executionLayer fill:#ffebee,stroke:#b71c1c,stroke-width:2px
     classDef contextLayer fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
 
-    class UI,GE,NP,PP,PM,DM userLayer
+    class UI,GE,NP,PP,PM,DM,NF userLayer
     class DL,DS,DD,DP deliverableLayer
     class AIE,NU,LFN,CWM,CGF aiLayer
     class NEO,GE2,CT,NS,NM graphLayer
@@ -573,9 +597,11 @@ safepy-mvp/
 │   │   ├── dependency-graph.tsx
 │   │   └── deliverable-form.tsx
 │   ├── graph/            # Graph editor components
-│   │   ├── canvas.tsx    # React Flow canvas
-│   │   ├── node-palette.tsx
-│   │   └── properties-panel.tsx
+│   │   ├── canvas.tsx    # React Flow canvas with auto-arrangement
+│   │   ├── node-palette.tsx # Context-aware palette
+│   │   ├── properties-panel.tsx
+│   │   ├── node-filters.tsx # Context/deliverable/status filters
+│   │   └── auto-arranger.ts # Automatic node positioning
 │   └── ui/               # shadcn/ui components
 ├── lib/                  # Core business logic
 │   ├── deliverables/     # Deliverable management system
@@ -659,11 +685,14 @@ node scripts/init-neo4j.js
 - Graph persistence layer
 - Real-time sync between deliverables and nodes
 
-**Week 4: Visual Editor Foundation**
+**Week 4: Visual Editor Foundation & Intelligent Organization**
 - React Flow canvas with deliverable integration
-- Deliverable-aware node placement
-- Progress visualization in canvas
-- Real-time deliverable status updates
+- Node filtering system (context, deliverable, status)
+- Automatic node arrangement by deliverable membership
+- Visual deliverable containers with progress indicators
+- Deliverable-aware node placement and highlighting
+- Progress visualization in canvas with status colors
+- Real-time deliverable status updates and auto-refresh
 
 **Week 5: AI Agent Foundation & Deliverable Intelligence**
 - AI Agent Engine architecture (systematic node understanding)
@@ -789,13 +818,16 @@ npm run dev
 1. **Landing Page:** "Build AI-understandable codebases with intelligent project assistance"
 2. **Natural Language Start:** Say "Create a user management system" to AI agent
 3. **AI Creates Epic:** AI automatically creates "User Management" epic with sub-deliverables
-4. **Conversational Refinement:** Tell AI "Focus on authentication first" - AI prioritizes deliverables
-5. **Guided Node Creation:** AI suggests "Start with login form node for the auth deliverable"
-6. **Intelligent Validation:** AI checks if nodes fit deliverable scope and requirements
-7. **Progress Conversations:** Ask AI "What's the status of user registration?" - get detailed updates
-8. **Contextual Help:** AI knows exactly which code and nodes belong to each deliverable
-9. **Smart Execution:** Tell AI "Test the authentication deliverable" - AI runs appropriate tests
-10. **Complete System:** AI-understandable codebase with systematic project delivery
+4. **Visual Organization:** See deliverables automatically arranged with progress indicators
+5. **Smart Filtering:** Click "Show Frontend Nodes" to focus on UI components
+6. **Deliverable Focus:** Select "Authentication" deliverable to highlight related nodes
+7. **Conversational Refinement:** Tell AI "Focus on authentication first" - AI prioritizes and arranges
+8. **Guided Node Creation:** AI suggests "Start with login form node for the auth deliverable"
+9. **Auto-Arrangement:** Nodes automatically position based on deliverable membership
+10. **Progress Conversations:** Ask AI "What's the status of user registration?" - see visual updates
+11. **Contextual Help:** AI knows exactly which code and nodes belong to each deliverable
+12. **Smart Execution:** Tell AI "Test the authentication deliverable" - AI runs appropriate tests
+13. **Complete System:** AI-understandable codebase with systematic project delivery
 
 ### Success Metrics (MVP)
 
@@ -882,6 +914,13 @@ npm run dev
 - [ ] Pyodide execution of Python code
 - [ ] Hybrid execution orchestration
 - [ ] Error handling and result aggregation
+
+**Intelligent Frontend Organization:**
+- [ ] Automatic node arrangement by deliverable membership
+- [ ] Context filtering (show only frontend/backend nodes)
+- [ ] Deliverable highlighting and focus features
+- [ ] Status-based visual coding (planned/in-progress/completed)
+- [ ] Deliverable containers with collapsible sections
 
 **User Experience:**
 - [ ] Deliverable-focused workflow guides development
