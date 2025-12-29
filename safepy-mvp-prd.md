@@ -23,26 +23,50 @@ SafePy Cloud MVP is a **minimal viable product** that demonstrates the core arch
 
 **Why Deliverables Matter:** Traditional code generation tools create code in isolation. SafePy integrates with project management where each node contributes to specific deliverables.
 
+**AI-Powered Deliverable Intelligence:**
+
+**Natural Language Commands:**
+```typescript
+// User can say:
+"work on the user authentication deliverable"
+"show me the login feature progress"
+"what's blocking the payment integration?"
+"generate code for the shopping cart epic"
+
+// AI Agent understands:
+// 1. Which deliverable is referenced
+// 2. Current completion status
+// 3. Associated nodes and code
+// 4. Dependencies and blockers
+// 5. What actions to take next
+```
+
 **Deliverable Structure:**
 - **Epic Deliverables:** Large features broken into smaller deliverables
 - **Feature Deliverables:** Specific functionality with acceptance criteria
 - **Task Deliverables:** Individual implementation units
 - **Node Groups:** Collections of nodes that implement a deliverable
 
+**AI Deliverable Understanding:**
+- **Scope Awareness:** AI knows what each deliverable encompasses
+- **Code Mapping:** AI tracks which code belongs to which deliverable
+- **Progress Intelligence:** AI understands completion status and next steps
+- **Dependency Logic:** AI knows deliverable relationships and blockers
+
 **Node-to-Deliverable Mapping:**
 ```mermaid
 graph TD
-    A[Epic: User Management] --> B[Deliverable: User Registration]
-    A --> C[Deliverable: User Authentication]
-    A --> D[Deliverable: User Profile]
+    A[Epic: User Management<br/>AI: "Contains auth, profile, settings"] --> B[Deliverable: User Registration<br/>AI: "Frontend form + backend API"]
+    A --> C[Deliverable: User Authentication<br/>AI: "Login/logout + JWT tokens"]
+    A --> D[Deliverable: User Profile<br/>AI: "CRUD operations + validation"]
 
-    B --> E[Node: Registration Form]
-    B --> F[Node: Email Validation]
-    B --> G[Node: User Creation API]
+    B --> E[Node: Registration Form<br/>AI: "React component, 100% complete"]
+    B --> F[Node: Email Validation<br/>AI: "Frontend + backend validation"]
+    B --> G[Node: User Creation API<br/>AI: "Python endpoint, type-safe"]
 
-    C --> H[Node: Login Form]
-    C --> I[Node: Password Hashing]
-    C --> J[Node: JWT Generation]
+    C --> H[Node: Login Form<br/>AI: "Form component, needs styling"]
+    C --> I[Node: Password Hashing<br/>AI: "bcrypt integration, secure"]
+    C --> J[Node: JWT Generation<br/>AI: "Token creation, 90% complete"]
 ```
 
 **Deliverable States & Workflow:**
@@ -52,7 +76,14 @@ graph TD
 - **Testing:** Deliverable under test
 - **Completed:** Deliverable deployed and accepted
 - **Blocked:** Dependencies not met or issues found
+
+**AI State Intelligence:**
+- **Planned:** "This deliverable needs node creation. Should I start with the UI or backend?"
+- **In Progress:** "Working on 3/5 nodes. The API node is 80% complete."
+- **Code Generated:** "All code generated. Ready for testing. Found potential type conflicts."
+- **Blocked:** "Waiting for 'Database Schema' deliverable. Can't proceed with data operations."
 **AI Agent Navigation:** Nodes and constraints guide AI context window and systematic understanding
+**Deliverable Intelligence:** AI understands deliverables, associated code, and project context for natural language commands
 **Deliverable Integration:** Each node belongs to a deliverable, enabling systematic project management
 
 ### Language Support (MVP)
@@ -102,6 +133,30 @@ graph TD
 - **Node Metadata Schema:** Rich, structured information that fits in minimal context space
 - **Relationship Indexing:** Pre-computed navigation paths prevent AI from exploring irrelevant code
 - **Constraint-Guided Focus:** AI only sees code sections permitted by node constraints
+- **Deliverable Intelligence:** AI understands project scope, completion status, and deliverable relationships
+
+**AI Deliverable Intelligence System:**
+
+**Natural Language Understanding:**
+```typescript
+// AI Agent can interpret commands like:
+"work on user authentication" → Identifies "User Authentication" deliverable
+"show login progress" → Displays completion status of login-related deliverables
+"fix the registration bug" → Navigates to registration deliverable's nodes and code
+"what's next for payments" → Analyzes payment deliverable dependencies and status
+```
+
+**Deliverable Context Awareness:**
+- **Scope Recognition:** AI knows exactly what each deliverable encompasses
+- **Code Mapping:** AI tracks generated code back to originating deliverables
+- **Progress Intelligence:** AI understands completion percentages and blocking factors
+- **Dependency Logic:** AI knows which deliverables depend on others
+
+**Intelligent Assistance:**
+- **Guided Development:** "Start with the database schema deliverable first"
+- **Code Suggestions:** "For the login deliverable, you need these node types"
+- **Issue Resolution:** "The payment deliverable is blocked by missing API keys"
+- **Progress Updates:** "User registration is 80% complete, ready for testing"
 
 **Solving Cursor/GitHub Copilot Limitations:**
 
@@ -125,8 +180,12 @@ graph TD
 
 **Result:** AI agents can now systematically navigate any codebase size because they understand the graph structure first, then drill down into specific code sections as needed.
 
-### MVP Success Criteria (Deliverable-Driven Development)
+### MVP Success Criteria (AI-Powered Deliverable Development)
 
+- ✅ **AI Deliverable Intelligence:** AI understands deliverables and associated code via natural language
+- ✅ **Natural Language Commands:** Users can say "work on X deliverable" and AI responds intelligently
+- ✅ **Deliverable Context Awareness:** AI knows scope, progress, dependencies, and blockers per deliverable
+- ✅ **Code-to-Deliverable Mapping:** AI tracks which code belongs to which deliverable
 - ✅ **Deliverable Integration:** Each node belongs to a deliverable with progress tracking
 - ✅ **Project Management:** Epic → Feature → Task → Node hierarchy works
 - ✅ **Dependency Management:** Deliverables respect dependencies and blocking states
@@ -290,6 +349,10 @@ graph TB
     DS --> GE
     DD --> GE
 
+    AIE --> DL
+    AIE --> DS
+    AIE --> DP
+
     GE --> AIE
     AIE --> NU
     AIE --> LFN
@@ -347,6 +410,8 @@ graph TB
     class CE,CG,CTC,TV processingLayer
     class ORC,NJSE,PYOD,HBE executionLayer
     class FCM,BCM,HCM,CM contextLayer
+
+    linkStyle 24,25,26 stroke:#4a148c,stroke-width:3px
 ```
 
 ### How Everything Works Together: Data Flow & Interactions
@@ -388,33 +453,35 @@ sequenceDiagram
     participant CG as Code Generator
     participant EX as Execution Runtime
 
-    U->>D: Create "User Login" deliverable
-    D->>G: Store deliverable with requirements
-    D->>U: Show required node types for deliverable
+    U->>AI: "Create user authentication deliverable"
+    AI->>D: Parse natural language, identify deliverable type
+    D->>G: Store deliverable with AI-understood requirements
+    AI->>U: "Created 'User Authentication' deliverable. Needs login form and API nodes."
 
-    U->>AI: Create "Login Form" node in deliverable
-    AI->>D: Check deliverable requirements
-    D->>AI: Confirm node fits deliverable scope
-    AI->>G: Create node linked to deliverable
-    G->>D: Update deliverable progress
+    U->>AI: "Work on the login deliverable"
+    AI->>D: Identify "User Authentication" deliverable, check status
+    AI->>U: "Login deliverable is 0% complete. I'll help you build the login form node."
 
-    U->>AI: Add "Auth API" node to deliverable
-    AI->>CE: Validate cross-node constraints
-    CE->>AI: Constraints satisfied
-    AI->>G: Store node-to-deliverable relationship
+    AI->>G: Create "Login Form" node linked to deliverable
+    G->>D: Update deliverable progress (33% complete)
+    AI->>U: "Created login form node. Now add the auth API node."
 
-    D->>U: Deliverable shows 60% complete (2/3 nodes done)
+    U->>AI: "Add password validation to login"
+    AI->>D: Check deliverable scope for password validation
+    AI->>CE: Validate constraints for new validation node
+    AI->>G: Create validation node, link to deliverable
+    G->>D: Update progress (66% complete)
 
-    U->>AI: Generate code for deliverable
-    AI->>CG: Generate TypeScript + Python for deliverable nodes
-    CG->>G: Store generated code linked to deliverable
+    U->>AI: "What's the status of authentication?"
+    AI->>D: Query deliverable completion and blocking factors
+    AI->>U: "Authentication deliverable is 66% complete. Missing JWT token generation node."
 
-    U->>AI: Execute deliverable
-    AI->>EX: Run deliverable's nodes in correct order
-    EX->>D: Update deliverable status to "Completed"
-    D->>U: Show project progress dashboard
+    U->>AI: "Generate code for authentication"
+    AI->>CG: Generate TypeScript + Python for all deliverable nodes
+    CG->>G: Store code linked to deliverable with metadata
+    AI->>U: "Generated complete authentication system. Ready for testing."
 
-    Note over U,D: Deliverables orchestrate development - systematic, trackable progress
+    Note over U,AI: AI Agent understands deliverables, provides contextual assistance, tracks progress
 ```
 
 ### Solving AI Context Window Problem: Systematic Integration
@@ -517,7 +584,10 @@ safepy-mvp/
 │   │   ├── dependency-manager.ts # Blocking/validation logic
 │   │   ├── deliverable-schema.ts # Neo4j schemas
 │   │   └── workflow-states.ts # State management
-│   ├── ai-agent/         # AI Agent Navigation Engine
+│   ├── ai-agent/         # AI Agent Navigation & Intelligence Engine
+│   │   ├── deliverable-intelligence.ts # Natural language deliverable understanding
+│   │   ├── code-mapping.ts # Code-to-deliverable relationship tracking
+│   │   ├── contextual-assistance.ts # Smart suggestions based on deliverable context
 │   │   ├── node-understanding.ts # Systematic node comprehension
 │   │   ├── logic-flow.ts # Top→bottom, left→right navigation
 │   │   ├── context-window.ts # Dynamic focus management
@@ -595,8 +665,11 @@ node scripts/init-neo4j.js
 - Progress visualization in canvas
 - Real-time deliverable status updates
 
-**Week 5: AI Agent Foundation & Context System**
+**Week 5: AI Agent Foundation & Deliverable Intelligence**
 - AI Agent Engine architecture (systematic node understanding)
+- AI Deliverable Intelligence (natural language understanding of deliverables)
+- Code-to-deliverable mapping system (track which code belongs to which deliverable)
+- Contextual assistance engine (smart suggestions based on deliverable context)
 - Deliverable-scope AI navigation (AI focuses on active deliverables)
 - Node taxonomy and constraint ontology definition
 - Logic flow navigation system (top→bottom, left→right)
@@ -711,17 +784,18 @@ npm run dev
 
 ## 5. MVP User Journey
 
-### First Time User Experience (Deliverable-Driven + AI-Navigable)
+### First Time User Experience (AI-Powered Deliverable Development)
 
-1. **Landing Page:** "Build AI-understandable codebases with systematic project delivery"
-2. **Create Epic:** "User Management System" as top-level deliverable
-3. **Break into Features:** "User Registration", "Authentication", "Profile Management"
-4. **Create Deliverable:** "User Login Feature" with acceptance criteria
-5. **Add Nodes to Deliverable:** Drag nodes that implement the deliverable
-6. **Visual Progress:** See deliverable completion as nodes are connected
-7. **AI Navigation Demo:** Show how AI understands deliverable scope and node relationships
-8. **Execute Deliverable:** Run all nodes in deliverable with progress tracking
-9. **View Generated Code:** See complete deliverable implementation with systematic structure
+1. **Landing Page:** "Build AI-understandable codebases with intelligent project assistance"
+2. **Natural Language Start:** Say "Create a user management system" to AI agent
+3. **AI Creates Epic:** AI automatically creates "User Management" epic with sub-deliverables
+4. **Conversational Refinement:** Tell AI "Focus on authentication first" - AI prioritizes deliverables
+5. **Guided Node Creation:** AI suggests "Start with login form node for the auth deliverable"
+6. **Intelligent Validation:** AI checks if nodes fit deliverable scope and requirements
+7. **Progress Conversations:** Ask AI "What's the status of user registration?" - get detailed updates
+8. **Contextual Help:** AI knows exactly which code and nodes belong to each deliverable
+9. **Smart Execution:** Tell AI "Test the authentication deliverable" - AI runs appropriate tests
+10. **Complete System:** AI-understandable codebase with systematic project delivery
 
 ### Success Metrics (MVP)
 
@@ -767,6 +841,13 @@ npm run dev
 ## 7. MVP Testing Strategy
 
 ### MVP Launch Validation Checklist
+
+**AI-Powered Deliverable Intelligence:**
+- [ ] AI understands natural language deliverable commands ("work on X", "status of Y")
+- [ ] AI knows which nodes and code belong to each deliverable
+- [ ] AI provides contextual help based on deliverable scope and progress
+- [ ] AI tracks deliverable dependencies and blocking factors
+- [ ] AI suggests next steps and prioritizes deliverables intelligently
 
 **Deliverable-Driven Project Management:**
 - [ ] Epic → Feature → Task → Node hierarchy works
