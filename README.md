@@ -4,25 +4,25 @@
 
 ## Overview
 
-SafePy Cloud is a **100% type-safe, constraint-first development platform** that eliminates JavaScript entirely. Visual graphs are compiled to **statically-typed languages only**:
+SafePy Cloud is a **100% type-safe, constraint-first development platform** that generates **Flask-based web applications only**. Visual graphs are compiled to **Python + Flask applications with PostgreSQL**:
 
-- **Frontend Nodes** → **TypeScript + React** (compiled to JavaScript at build-time, but 100% type-safe)
+- **Frontend Nodes** → **Flask Templates + WTForms** (server-side rendered, 100% type-safe)
 - **Backend Nodes** → **Python** (natively type-safe with mypy/pydantic)
-- **UI Libraries** → **shadcn/ui** (TypeScript-based, type-safe by construction)
+- **Database** → **PostgreSQL** (type-safe with SQLAlchemy)
 
-**Type-Safe Guarantee:** Every constraint in the visual graph becomes a **compile-time type guarantee**. No runtime JavaScript errors possible - all type violations caught at graph compilation time.
+**Type-Safe Guarantee:** Every constraint in the visual graph becomes a **compile-time type guarantee**. No runtime errors possible - all type violations caught at graph compilation time.
 
-**Core Architectural Innovation:** SafePy implements a "constraint-to-type compiler": `Visual Graph Constraints → TypeScript + Python Types → Statically-Typed Code → Type-Safe Execution`
+**Core Architectural Innovation:** SafePy implements a "constraint-to-type compiler": `Visual Graph Constraints → Python + Flask Types → Statically-Typed Web Application → Type-Safe Execution`
 
 **Key Technical Principles:**
 - Graph database as single source of truth
-- **100% Type-Safe Code Generation:** Constraints become TypeScript + Python type guarantees
-- **Zero Runtime JavaScript Errors:** All type violations caught at compile time
-- Multi-runtime execution (Browser, Serverless, Container)
-- Security-by-design with audited library ecosystem
+- **100% Type-Safe Code Generation:** Constraints become Python + Flask type guarantees
+- **Zero Runtime Errors:** All type violations caught at compile time
+- Multi-runtime execution (Flask development server, production WSGI, containerized)
+- Security-by-design with audited Python library ecosystem
 - **Constraint-to-Type Compiler:** Visual constraints → Static type guarantees
-- **Type-Safe UI Libraries:** shadcn/ui with full TypeScript integration
-- **Frontend/Backend Logic Separation**: Visual distinction and execution context management in graphs
+- **Type-Safe Web Applications:** Flask with SQLAlchemy and WTForms
+- **Unified Application Architecture**: Single Flask application with database integration
 
 ### Frontend UI/UX Design (N8N-Inspired)
 
@@ -63,55 +63,70 @@ SafePy Cloud is a **100% type-safe, constraint-first development platform** that
 - **Keyboard Shortcuts:** Vim-style navigation and node manipulation
 - **Context Menus:** Right-click menus for quick actions
 
-### Frontend/Backend Logic Separation in Visual Graphs
+### Unified Flask Application Architecture
 
-**Node Execution Contexts:**
+**Node Types in Visual Graphs:**
 
-#### 🎨 Frontend Nodes (Client-Side)
-**Visual Indicators:** Blue header with browser icon
-**Execution Runtime:** Browser (Pyodide) or Client-side JavaScript
-**Purpose:** UI components, client-side logic, user interactions
+#### 🎨 UI Nodes (Flask Templates)
+**Visual Indicators:** Blue header with Flask icon
+**Execution Runtime:** Flask application server
+**Purpose:** Web interface components, forms, data display, user interactions
 
 **Examples:**
-- **UI Components:** Buttons, forms, charts, data displays
-- **Client Logic:** Form validation, UI state management
-- **Browser APIs:** Local storage, geolocation, file uploads
-- **Visualization:** Charts, graphs, real-time updates
+- **UI Components:** Buttons, forms, tables, charts using Jinja2 templates
+- **Form Handling:** WTForms validation and processing
+- **Data Display:** HTML tables, charts with server-side rendering
+- **User Interactions:** Links, buttons, navigation
 
 **Code Generation:**
 ```python
-# Generated for Pyodide runtime (Browser)
-import streamlit as st
-import pandas as pd
+# Generated Flask route with template
+from flask import render_template, request
+from wtforms import Form, StringField, validators
 
-def render_data_table(data: pd.DataFrame):
-    """Frontend UI component - runs in browser"""
-    st.dataframe(data)
-    return st.button("Export CSV")
+class UserForm(Form):
+    name = StringField('Name', [validators.Length(min=1, max=50)])
+    email = StringField('Email', [validators.Email()])
+
+@app.route('/users', methods=['GET', 'POST'])
+def user_management():
+    """UI component - renders HTML form and handles submission"""
+    form = UserForm(request.form)
+    if request.method == 'POST' and form.validate():
+        # Process form data
+        save_user(form.name.data, form.email.data)
+        return redirect(url_for('user_list'))
+
+    return render_template('user_form.html', form=form)
 ```
 
-#### ⚙️ Backend Nodes (Server-Side)
-**Visual Indicators:** Green header with server icon
-**Execution Runtime:** Serverless (Firecracker) or Container (Docker)
-**Purpose:** Data processing, API calls, database operations, business logic
+#### ⚙️ Logic Nodes (Flask Business Logic)
+**Visual Indicators:** Green header with Python icon
+**Execution Runtime:** Flask application server
+**Purpose:** Data processing, database operations, API calls, business logic
 
 **Examples:**
-- **Database Queries:** PostgreSQL, Neo4j operations
-- **API Calls:** REST APIs, GraphQL endpoints, external services
-- **Data Processing:** ETL, transformations, computations
-- **Business Logic:** Validation, calculations, workflow steps
+- **Database Operations:** PostgreSQL queries with SQLAlchemy
+- **API Integration:** External service calls, data processing
+- **Business Logic:** Calculations, validations, workflow steps
+- **Data Transformation:** ETL operations, data cleaning
 
 **Code Generation:**
 ```python
-# Generated for Serverless runtime
-import sqlalchemy as sa
-from fastapi import FastAPI
+# Generated Flask business logic
+from flask import current_app
+from sqlalchemy.orm import Session
+from models import User
 
-def query_user_data(user_id: str, db_engine) -> dict:
-    """Backend database operation - runs on server"""
-    query = sa.select(User).where(User.id == user_id)
-    result = db_engine.execute(query).fetchone()
-    return result._asdict() if result else None
+def get_user_data(user_id: str, db: Session) -> dict:
+    """Database operation - runs in Flask application"""
+    user = db.query(User).filter(User.id == user_id).first()
+    return {
+        'id': user.id,
+        'name': user.name,
+        'email': user.email,
+        'created_at': user.created_at.isoformat()
+    } if user else None
 ```
 
 #### 🔄 Hybrid Nodes (Frontend + Backend)
@@ -145,23 +160,27 @@ def process_file_server(file_data) -> dict:
 
 ### Graph Execution Flow & Context Boundaries
 
-**Execution Context Management:**
+**Flask Application Execution Flow:**
 
-```typescript
-enum ExecutionContext {
-  FRONTEND = 'frontend',    // Browser/Pyodide
-  BACKEND = 'backend',      // Serverless/Container
-  HYBRID = 'hybrid'         // Split execution
-}
+```python
+from enum import Enum
+from typing import Dict, List
 
-interface NodeExecutionPlan {
-  nodeId: string;
-  context: ExecutionContext;
-  dependencies: string[];        // Must execute before this node
-  runtime: RuntimeType;          // Pyodide, Firecracker, Docker
-  generatedCode: string;
-  inputMappings: Map<string, string>;  // Where inputs come from
-  outputMappings: Map<string, string>; // Where outputs go
+class FlaskExecutionContext(Enum):
+    ROUTE = 'route'        # Flask route handlers (@app.route)
+    MODEL = 'model'        # SQLAlchemy database models
+    TEMPLATE = 'template'  # Jinja2 HTML templates
+    BUSINESS_LOGIC = 'logic'  # Pure Python business logic
+
+class NodeExecutionPlan:
+    node_id: str
+    context: FlaskExecutionContext
+    dependencies: List[str]        # Must execute before this node
+    route_path: str               # For route nodes
+    model_name: str              # For model nodes
+    generated_code: str
+    input_mappings: Dict[str, str]  # Where inputs come from
+    output_mappings: Dict[str, str] # Where outputs go
 }
 ```
 
@@ -183,77 +202,77 @@ Connection Lines:
 ⚠️ Red highlight: Context boundary violation
 ```
 
-### Code Generation Strategy by Context
+### Flask Application Code Generation
 
-**Context-Specific Code Generation:**
+**Unified Flask Code Generation:**
 
-```typescript
-class CodeGenerator {
-  generateNodeCode(node: Node, context: ExecutionContext): string {
-    switch (context) {
-      case ExecutionContext.FRONTEND:
-        return this.generateFrontendCode(node);
-      case ExecutionContext.BACKEND:
-        return this.generateBackendCode(node);
-      case ExecutionContext.HYBRID:
-        return this.generateHybridCode(node);
-      default:
-        throw new Error(`Unsupported execution context: ${context}`);
-    }
-  }
+```python
+class FlaskCodeGenerator:
+  def generate_flask_application(self, graph: Graph) -> str:
+    """Generate complete Flask application from visual graph"""
 
-  private generateFrontendCode(node: Node): string {
-    // Generate Pyodide-compatible code
-    // Focus on UI, visualization, client-side logic
-    return `
-def ${node.id}(${this.getInputParams(node)}):
-    # Frontend-specific imports and logic
-    import streamlit as st
-    ${this.generateUILogic(node)}
-    return ${this.generateUIOutput(node)}
-`;
-  }
+    routes = []
+    models = []
+    templates = []
 
-  private generateBackendCode(node: Node): string {
-    // Generate server-side executable code
-    // Focus on data processing, APIs, databases
-    return `
-def ${node.id}(${this.getInputParams(node)}):
-    # Backend-specific imports and logic
-    import sqlalchemy as sa
-    ${this.generateBusinessLogic(node)}
-    return ${this.generateDataOutput(node)}
-`;
-  }
-}
+    for node in graph.nodes:
+      if node.type == 'ui':
+        routes.append(self.generate_flask_route(node))
+        templates.append(self.generate_jinja_template(node))
+      elif node.type == 'logic':
+        routes.append(self.generate_flask_route(node))
+        models.append(self.generate_sqlalchemy_model(node))
+
+    return self.assemble_flask_app(routes, models, templates)
+
+  def generate_flask_route(self, node: Node) -> str:
+    """Generate Flask route from node"""
+    return f'''
+@app.route('{node.route_path}', methods={node.http_methods})
+def {node.function_name}():
+    """Generated Flask route for {node.name}"""
+    {self.generate_route_logic(node)}
+    return {self.generate_route_response(node)}
+'''
+
+  def generate_sqlalchemy_model(self, node: Node) -> str:
+    """Generate SQLAlchemy model for data nodes"""
+    return f'''
+class {node.model_name}(db.Model):
+    """Generated SQLAlchemy model for {node.name}"""
+    id = db.Column(db.Integer, primary_key=True)
+    {self.generate_model_fields(node)}
+'''
 ```
 
-### Deployment & Runtime Architecture
+### Flask Application Deployment & Runtime
 
-**Context-Based Deployment Strategy:**
+**Unified Flask Deployment Strategy:**
 
 ```
 Single Graph Deployment:
-├── Frontend Bundle (Static Files)
-│   ├── Pyodide Runtime
-│   ├── UI Components
-│   └── Client-side Logic
-├── Backend Services
-│   ├── API Endpoints
-│   ├── Database Operations
-│   └── Business Logic
+├── Flask Application
+│   ├── Routes (Generated from UI/Logic nodes)
+│   ├── Templates (Jinja2 HTML templates)
+│   ├── Models (SQLAlchemy database models)
+│   └── Static Assets (CSS, JS, Images)
+├── PostgreSQL Database
+│   ├── Tables (Generated from data nodes)
+│   ├── Constraints (Type-safe relationships)
+│   └── Indexes (Performance optimization)
 └── Infrastructure
-    ├── CDN (Frontend)
-    ├── Serverless Functions (Backend)
-    └── Databases
+    ├── WSGI Server (Gunicorn/Waitress)
+    ├── Reverse Proxy (nginx)
+    └── Database Connection Pool
 ```
 
-**Runtime Communication Flow:**
-1. **User Interaction** → Frontend Node Execution
-2. **Data Requirements** → API Call to Backend
-3. **Backend Processing** → Database/API Operations
-4. **Results Return** → Frontend UI Updates
-5. **Real-time Sync** → WebSocket Connections
+**Runtime Request Flow:**
+1. **HTTP Request** → Flask Route Handler
+2. **Form Validation** → WTForms Processing
+3. **Business Logic** → Python Function Execution
+4. **Database Operations** → SQLAlchemy Queries
+5. **Template Rendering** → Jinja2 HTML Response
+6. **HTTP Response** → Client Browser
 
 ### Constraint System & Context Boundaries
 
@@ -307,69 +326,80 @@ constraint: no_sql_injection_risk
   message: "SQL injection prevention: only parameterized queries allowed"
   severity: ERROR
 
-# Context-aware security constraints
-constraint: frontend_security
-  context: frontend
+# Flask Application Security Constraints
+constraint: route_security
+  context: route
   rules:
-    - must validate all user inputs
-    - cannot access sensitive data directly
-    - must use secure communication with backend
-    - client-side storage must be encrypted
-
-constraint: backend_security
-  context: backend
-  rules:
-    - must authenticate all requests
+    - must validate all form inputs with WTForms
+    - must authenticate user sessions
     - must authorize based on user roles
-    - must validate all inputs
-    - must sanitize all outputs
-    - must log all security events
+    - must use CSRF protection on POST requests
+    - must sanitize template variables
 
-constraint: hybrid_security
-  context: hybrid
+constraint: model_security
+  context: model
   rules:
-    - secure data transfer between contexts
-    - no sensitive data in frontend
-    - encrypted communication channels
-    - audit trail for cross-context operations
+    - must validate all data with Pydantic models
+    - must use SQLAlchemy ORM (no raw SQL)
+    - must implement proper access controls
+    - must log all database operations
+
+constraint: template_security
+  context: template
+  rules:
+    - must escape all user data (auto-escaped by Jinja2)
+    - no JavaScript execution in templates
+    - must validate template context data
 ```
 
-**Cross-Context Data Flow Validation:**
-- ✅ Frontend → Backend: HTTP requests, serialized data
-- ✅ Backend → Frontend: JSON responses, WebSocket messages
-- ❌ Direct database access from frontend
-- ❌ UI rendering from backend
-- ⚠️ Large data transfers require optimization
+**Flask Application Data Flow Validation:**
+- ✅ Route → Model: Form data to database operations
+- ✅ Model → Route: Query results to template rendering
+- ✅ Route → Template: Context data to HTML generation
+- ❌ Direct SQL in routes (must use models)
+- ❌ Business logic in templates (must use routes)
+- ⚠️ Large datasets require pagination/optimization
 
 ### Development & Testing Implications
 
-**Context-Specific Testing:**
+**Flask Application Testing:**
 
-```typescript
-// Frontend component testing
-describe('DataTable Component', () => {
-  it('renders data correctly in browser', () => {
-    render(<DataTable data={testData} />);
-    expect(screen.getByRole('table')).toBeInTheDocument();
-  });
-});
+```python
+import pytest
+from flask import Flask
+from myapp import create_app, db
+from myapp.models import User
 
-// Backend logic testing
-describe('UserDataService', () => {
-  it('queries database correctly', async () => {
-    const result = await queryUserData('user123');
-    expect(result).toHaveProperty('id', 'user123');
-  });
-});
+# Route testing
+def test_user_creation_route(client):
+    """Test Flask route for user creation"""
+    response = client.post('/users', data={
+        'name': 'John Doe',
+        'email': 'john@example.com'
+    })
+    assert response.status_code == 302  # Redirect after success
+    assert User.query.filter_by(email='john@example.com').first()
 
-// Integration testing
-describe('FileUploadFlow', () => {
-  it('handles complete upload process', async () => {
-    // Test frontend file selection
-    // Test backend file processing
-    // Test cross-context communication
-  });
-});
+# Model testing
+def test_user_model():
+    """Test SQLAlchemy model"""
+    user = User(name='Jane Doe', email='jane@example.com')
+    db.session.add(user)
+    db.session.commit()
+
+    retrieved = User.query.filter_by(email='jane@example.com').first()
+    assert retrieved.name == 'Jane Doe'
+
+# Integration testing
+def test_complete_user_workflow(client):
+    """Test complete user creation and display workflow"""
+    # Create user via form
+    client.post('/users', data={'name': 'Test', 'email': 'test@test.com'})
+
+    # Check user appears in list
+    response = client.get('/users')
+    assert b'Test' in response.data
+    assert b'test@test.com' in response.data
 ```
 
 This separation ensures **clear architectural boundaries** while maintaining **seamless integration** between frontend and backend logic in the visual graph paradigm.
@@ -982,55 +1012,59 @@ graph TD
 
 **Why 100% Type-Safe?**
 
-SafePy eliminates JavaScript runtime errors entirely by:
+SafePy eliminates runtime errors entirely through Python type safety:
 
-1. **No JavaScript Runtime:** Frontend generates TypeScript → compiles to JavaScript at build time
-2. **Backend Type Safety:** Python with strict mypy + Pydantic validation
+1. **Pure Python Runtime:** Applications run entirely in Python with Flask
+2. **Static Type Checking:** Python with strict mypy + Pydantic validation
 3. **Constraint-to-Type Translation:** Visual constraints become static type guarantees
 4. **Compile-Time Verification:** All type violations caught before deployment
 
 **The Type-Safe Promise:**
-```typescript
-// Traditional JavaScript (Runtime Errors Possible)
-function processUser(user: any) {
-  return user.name.toUpperCase(); // ❌ Runtime error if user.name undefined
-}
+```python
+# Traditional dynamic Python (Runtime Errors Possible)
+def process_user(user):
+    return user['name'].upper()  # ❌ Runtime error if 'name' key missing
 
-// SafePy Generated (Type-Safe)
-interface User {
-  readonly id: string;
-  readonly name: string;  // Guaranteed to exist
-  readonly email: string; // Guaranteed to exist
-}
+# SafePy Generated (Type-Safe)
+from pydantic import BaseModel
+from typing import Optional
 
-function processUser(user: User): string {
-  return user.name.toUpperCase(); // ✅ Compile-time guaranteed safe
-}
+class User(BaseModel):
+    id: str
+    name: str  # Guaranteed to exist and be string
+    email: str  # Guaranteed to exist and be string
+
+def process_user(user: User) -> str:
+    return user.name.upper()  # ✅ Type-checker guaranteed safe
 ```
 
 #### Constraint-to-Type Translation Engine
 
 **How Visual Constraints Become Type Guarantees:**
 
-```typescript
-interface ConstraintToTypeTranslator {
-  translateConstraint(constraint: Constraint): TypeScriptType | PythonType;
+```python
+from typing import Union, List, Optional
+from pydantic import BaseModel
 
-  // Example translations:
-  // Constraint: "field must be string"
-  // Becomes:   string (TypeScript) | str (Python)
+class ConstraintToTypeTranslator:
+    def translate_constraint(self, constraint: Constraint) -> str:
+        """Translate visual constraints to Python type annotations"""
 
-  // Constraint: "field must be non-null"
-  // Becomes:   T (required) vs T | undefined (optional)
+        # Example translations:
+        # Constraint: "field must be string"
+        # Becomes:   str
 
-  // Constraint: "array must contain User objects"
-  // Becomes:   User[] (TypeScript) | List[User] (Python)
-}
+        # Constraint: "field must be non-null"
+        # Becomes:   T (required) vs Optional[T] (optional)
 
-// Generated TypeScript interfaces from graph constraints
-interface GeneratedUserAPI {
-  // Constraint: "endpoint returns User object or null"
-  getUser(id: string): Promise<User | null>;
+        # Constraint: "array must contain User objects"
+        # Becomes:   List[User]
+
+# Generated Pydantic models from graph constraints
+class GeneratedUserAPI:
+    # Constraint: "endpoint returns User object or null"
+    def get_user(self, user_id: str) -> Optional[User]:
+        pass
 
   // Constraint: "endpoint accepts valid User data"
   createUser(data: CreateUserInput): Promise<User>;
