@@ -1,0 +1,43 @@
+{
+  "name": "safepy-prd",
+  "version": "1.0.0",
+  "description": "SafePy Cloud - Product Requirements Document and Technical Specification",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "docs": "npx @mintlify/cli dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/safepy-prd.git"
+  },
+  "keywords": [
+    "safepy",
+    "low-code",
+    "constraint-first",
+    "type-safe",
+    "visual-programming",
+    "ai-assisted"
+  ],
+  "author": "SafePy Team",
+  "license": "MIT",
+  "devDependencies": {
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "typescript": "^5.0.0",
+    "@types/react": "^18.0.0",
+    "@types/node": "^20.0.0",
+    "tailwindcss": "^3.0.0",
+    "autoprefixer": "^10.0.0",
+    "postcss": "^8.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
