@@ -19,9 +19,14 @@ SafePy Cloud MVP is a **minimal viable product** that demonstrates the core arch
 **Constraint-to-Type Compiler:** Visual constraints become compile-time type guarantees
 **Context-Aware Execution:** Frontend/Backend/Hybrid contexts with proper separation
 
-### Deliverable-Based Project Management (Core Innovation)
+### PRD-Connected Deliverable Management (Core Innovation)
 
-**Why Deliverables Matter:** Traditional code generation tools create code in isolation. SafePy integrates with project management where each node contributes to specific deliverables.
+**Why PRD Connection Matters:** Traditional development disconnects product requirements from implementation. SafePy bridges this gap by connecting deliverables directly to PRD-defined features.
+
+**The PRD → Deliverable → Node Pipeline:**
+```
+PRD Feature Description → AI Analysis → Deliverable Breakdown → Node Implementation → Code Generation
+```
 
 **AI-Powered Deliverable Intelligence:**
 
@@ -41,11 +46,19 @@ SafePy Cloud MVP is a **minimal viable product** that demonstrates the core arch
 // 5. What actions to take next
 ```
 
-**Deliverable Structure:**
-- **Epic Deliverables:** Large features broken into smaller deliverables
-- **Feature Deliverables:** Specific functionality with acceptance criteria
-- **Task Deliverables:** Individual implementation units
-- **Node Groups:** Collections of nodes that implement a deliverable
+**PRD-to-Deliverable Mapping:**
+
+**PRD Feature Analysis:**
+- **Feature Parsing:** AI reads PRD features and extracts requirements
+- **Acceptance Criteria:** Converts PRD acceptance criteria into deliverable goals
+- **Technical Requirements:** Identifies needed APIs, data models, UI components
+- **Dependency Analysis:** Maps feature relationships and prerequisites
+
+**Deliverable Structure (PRD-Derived):**
+- **Epic Deliverables:** Large features from PRD broken into smaller deliverables
+- **Feature Deliverables:** Direct mapping from PRD feature descriptions
+- **Task Deliverables:** Individual implementation units with PRD acceptance criteria
+- **Node Groups:** Technical implementation nodes derived from deliverable requirements
 
 **AI Deliverable Understanding:**
 - **Scope Awareness:** AI knows what each deliverable encompasses
@@ -135,22 +148,35 @@ graph TD
 - **Constraint-Guided Focus:** AI only sees code sections permitted by node constraints
 - **Deliverable Intelligence:** AI understands project scope, completion status, and deliverable relationships
 
-**AI Deliverable Intelligence System:**
+**AI PRD & Deliverable Intelligence System:**
 
-**Natural Language Understanding:**
+**PRD Understanding & Analysis:**
 ```typescript
-// AI Agent can interpret commands like:
-"work on user authentication" → Identifies "User Authentication" deliverable
-"show login progress" → Displays completion status of login-related deliverables
-"fix the registration bug" → Navigates to registration deliverable's nodes and code
-"what's next for payments" → Analyzes payment deliverable dependencies and status
+// AI Agent reads PRDs and creates deliverables:
+"Implement user login with email/password" (from PRD)
+→ Creates "User Authentication" deliverable with login form + API nodes
+→ Maps to PRD acceptance criteria: "Users can log in with valid credentials"
+
+// AI connects PRD features to technical implementation:
+"Shopping cart should show item prices" (PRD requirement)
+→ Creates "Price Display" deliverable with data source + UI nodes
+→ Links to "Pricing API" deliverable dependency
 ```
 
-**Deliverable Context Awareness:**
-- **Scope Recognition:** AI knows exactly what each deliverable encompasses
-- **Code Mapping:** AI tracks generated code back to originating deliverables
-- **Progress Intelligence:** AI understands completion percentages and blocking factors
-- **Dependency Logic:** AI knows which deliverables depend on others
+**Natural Language Commands with PRD Context:**
+```typescript
+// AI understands PRD context:
+"implement the user login feature from the PRD" → Parses PRD, creates deliverable
+"show progress on payment features" → Filters deliverables by PRD payment section
+"what's missing for user registration?" → Checks PRD requirements vs. implemented nodes
+"generate code for the shopping cart epic" → Finds all shopping cart deliverables from PRD
+```
+
+**PRD-to-Implementation Intelligence:**
+- **Feature Parsing:** Extracts requirements, acceptance criteria, technical needs from PRD text
+- **Automatic Deliverable Creation:** Generates deliverable hierarchy from PRD feature descriptions
+- **Requirement Tracking:** Maps PRD acceptance criteria to deliverable completion status
+- **Technical Mapping:** Identifies needed APIs, data models, UI components from PRD descriptions
 
 **Intelligent Assistance:**
 - **Guided Development:** "Start with the database schema deliverable first"
@@ -180,8 +206,12 @@ graph TD
 
 **Result:** AI agents can now systematically navigate any codebase size because they understand the graph structure first, then drill down into specific code sections as needed.
 
-### MVP Success Criteria (AI-Powered Deliverable Development)
+### MVP Success Criteria (PRD-to-Code Pipeline)
 
+- ✅ **PRD Feature Parsing:** AI can read PRD text and extract features, requirements, acceptance criteria
+- ✅ **Automatic Deliverable Creation:** AI generates deliverable hierarchy from PRD feature descriptions
+- ✅ **PRD-to-Deliverable Mapping:** Features map correctly to deliverables with proper technical requirements
+- ✅ **Acceptance Criteria Tracking:** Deliverable completion measured against PRD acceptance criteria
 - ✅ **AI Deliverable Intelligence:** AI understands deliverables and associated code via natural language
 - ✅ **Natural Language Commands:** Users can say "work on X deliverable" and AI responds intelligently
 - ✅ **Deliverable Context Awareness:** AI knows scope, progress, dependencies, and blockers per deliverable
@@ -313,6 +343,14 @@ graph TB
         CGF[Constraint-Guided Focus<br/>Relevance Filtering]
     end
 
+    %% PRD Integration Layer
+    subgraph "PRD-Connected Requirements"
+        PRD[PRD Integration<br/>Feature Parsing & Analysis]
+        PRA[PRD-to-Deliverable<br/>Automatic Mapping]
+        FAC[Feature Acceptance<br/>Criteria Tracking]
+        TRM[Technical Requirements<br/>Mapping]
+    end
+
     %% Project Management Layer
     subgraph "Deliverable-Based Project Management"
         DL[Deliverable Layer<br/>Epic/Feature/Task Management]
@@ -364,6 +402,11 @@ graph TB
     UI --> DM
     DM --> NF
 
+    PRD --> PRA
+    PRA --> FAC
+    PRA --> TRM
+    PRA --> DL
+
     DM --> DL
     DL --> DS
     DL --> DD
@@ -372,6 +415,8 @@ graph TB
     DL --> GE
     DS --> GE
     DD --> GE
+    FAC --> GE
+    TRM --> GE
 
     AIE --> DL
     AIE --> DS
@@ -420,6 +465,7 @@ graph TB
 
     %% Styling
     classDef userLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef prdLayer fill:#fff8e1,stroke:#f57c00,stroke-width:2px
     classDef deliverableLayer fill:#f1f8e9,stroke:#2e7d32,stroke-width:2px
     classDef aiLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef graphLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
@@ -428,6 +474,7 @@ graph TB
     classDef contextLayer fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
 
     class UI,GE,NP,PP,PM,DM,NF userLayer
+    class PRD,PRA,FAC,TRM prdLayer
     class DL,DS,DD,DP deliverableLayer
     class AIE,NU,LFN,CWM,CGF aiLayer
     class NEO,GE2,CT,NS,NM graphLayer
@@ -591,6 +638,11 @@ safepy-mvp/
 │   ├── projects/          # Project pages
 │   └── deliverables/      # Deliverable management pages
 ├── components/            # React components
+│   ├── prd/              # PRD integration
+│   │   ├── prd-uploader.tsx
+│   │   ├── prd-parser.tsx
+│   │   ├── feature-mapping.tsx
+│   │   └── requirement-tracker.tsx
 │   ├── deliverables/     # Deliverable management
 │   │   ├── deliverable-list.tsx
 │   │   ├── progress-dashboard.tsx
@@ -604,6 +656,12 @@ safepy-mvp/
 │   │   └── auto-arranger.ts # Automatic node positioning
 │   └── ui/               # shadcn/ui components
 ├── lib/                  # Core business logic
+│   ├── prd/              # PRD processing and analysis
+│   │   ├── prd-parser.ts # Extract features from PRD text
+│   │   ├── feature-analyzer.ts # Analyze requirements and acceptance criteria
+│   │   ├── deliverable-generator.ts # Create deliverables from PRD features
+│   │   ├── requirement-mapper.ts # Map PRD to technical requirements
+│   │   └── prd-schema.ts # PRD data structures
 │   ├── deliverables/     # Deliverable management system
 │   │   ├── deliverable-engine.ts # CRUD operations
 │   │   ├── progress-calculator.ts # Completion status
@@ -654,9 +712,15 @@ safepy-mvp/
 
 ## 3. MVP Implementation Plan
 
-### Phase 1: Graph-First Foundation (5 weeks)
+### Phase 1: Graph-First Foundation (6 weeks)
 
-**Week 1: Neo4j & Infrastructure Setup**
+**Week 1: PRD Integration Foundation**
+- PRD parsing and feature extraction
+- PRD data structures and schemas
+- Feature-to-deliverable mapping logic
+- PRD upload and import components
+
+**Week 2: Neo4j & Infrastructure Setup**
 ```bash
 # Initialize project
 npx create-next-app@latest safepy-mvp --typescript --tailwind --app
@@ -813,21 +877,21 @@ npm run dev
 
 ## 5. MVP User Journey
 
-### First Time User Experience (AI-Powered Deliverable Development)
+### First Time User Experience (PRD-to-Code Pipeline)
 
-1. **Landing Page:** "Build AI-understandable codebases with intelligent project assistance"
-2. **Natural Language Start:** Say "Create a user management system" to AI agent
-3. **AI Creates Epic:** AI automatically creates "User Management" epic with sub-deliverables
-4. **Visual Organization:** See deliverables automatically arranged with progress indicators
-5. **Smart Filtering:** Click "Show Frontend Nodes" to focus on UI components
-6. **Deliverable Focus:** Select "Authentication" deliverable to highlight related nodes
-7. **Conversational Refinement:** Tell AI "Focus on authentication first" - AI prioritizes and arranges
-8. **Guided Node Creation:** AI suggests "Start with login form node for the auth deliverable"
-9. **Auto-Arrangement:** Nodes automatically position based on deliverable membership
-10. **Progress Conversations:** Ask AI "What's the status of user registration?" - see visual updates
-11. **Contextual Help:** AI knows exactly which code and nodes belong to each deliverable
-12. **Smart Execution:** Tell AI "Test the authentication deliverable" - AI runs appropriate tests
-13. **Complete System:** AI-understandable codebase with systematic project delivery
+1. **Landing Page:** "Transform PRD features into working codebases"
+2. **PRD Upload/Import:** Upload PRD document or paste feature descriptions
+3. **AI PRD Analysis:** AI parses "User login with email/password validation" from PRD
+4. **Automatic Deliverable Creation:** AI creates "User Authentication" deliverable with required nodes
+5. **Feature-to-Node Mapping:** PRD acceptance criteria become deliverable completion goals
+6. **Intelligent Suggestions:** AI proposes "Login API" and "Validation Logic" nodes based on PRD
+7. **Visual Implementation:** See deliverables arranged with PRD requirements as guidance
+8. **Smart Filtering:** Click "Show Frontend Nodes" to focus on UI components from PRD
+9. **Deliverable Focus:** Select deliverable to highlight nodes implementing specific PRD features
+10. **Progress Tracking:** Completion measured against PRD acceptance criteria
+11. **PRD Compliance:** AI validates implementation against original PRD requirements
+12. **Smart Execution:** Tell AI "Test the authentication feature" - AI runs PRD-defined test scenarios
+13. **Complete Pipeline:** PRD Feature → Deliverable → Nodes → Generated Code
 
 ### Success Metrics (MVP)
 
@@ -880,6 +944,12 @@ npm run dev
 - [ ] AI provides contextual help based on deliverable scope and progress
 - [ ] AI tracks deliverable dependencies and blocking factors
 - [ ] AI suggests next steps and prioritizes deliverables intelligently
+
+**PRD-to-Deliverable Pipeline:**
+- [ ] PRD text parsing extracts features and acceptance criteria
+- [ ] Automatic deliverable creation from PRD feature descriptions
+- [ ] Technical requirement mapping from PRD to node types
+- [ ] PRD acceptance criteria linked to deliverable completion
 
 **Deliverable-Driven Project Management:**
 - [ ] Epic → Feature → Task → Node hierarchy works
